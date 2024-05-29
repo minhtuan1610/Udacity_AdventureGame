@@ -10,9 +10,9 @@ def print_sleep(message):
 def intro():
     print_sleep(
         "You find yourself standing in an open field, "
-        "filled with grass and yellow wildflowers.",
+        "filled with grass and yellow wildflowers."
         f"Rumor has it that a {enemy} is somewhere around here, "
-        "and has been terrifying the nearby village.",
+        "and has been terrifying the nearby village."
     )
     print_sleep("In front of you is a house.")
     print_sleep("To your right is a dark cave.")
@@ -76,7 +76,9 @@ def combat(weapon):
             "You feel a bit under-prepared for this, "
             "what with only having a tiny dagger."
         )
-    choice = input("Would you like to (1) fight or (2) run away?")
+    choice = ""
+    while choice not in ["1", "2"]:
+        choice = input("Would you like to (1) fight or (2) run away?")
     if choice == "1":
         if weapon == "dagger":
             print_sleep(f"You do your best...")
@@ -105,16 +107,30 @@ def combat(weapon):
         where_to()
 
 
+def play_game():
+    global game_state
+    while game_state == "running":
+        intro()
+        where_to()
+        game_state = play_again()
+
+
 def play_again():
     choice = ""
     while choice not in ["y", "n"]:
         choice = input("Would you like to play again? (y/n)")
         if choice == "n":
             print_sleep("Thanks for playing! See you next time.")
-            return "game_over"
+            exit(0)
         elif choice == "y":
             print_sleep("Excellent! Restarting the game ...")
             return "running"
+
+
+def game():
+    while True:
+        play_game()
+        play_again()
 
 
 game_state = "running"
@@ -123,15 +139,11 @@ while game_state == "running":
     enemy = random.choice(enemies)
     weapon = "dagger"
     cave_visited = False
-    new_weapon = [
+    new_weapons = [
         "Sword of Ogoroth",
         "Sword of King Arthur",
         "Trident of Poseidon",
         "Power Ring of Green Lantern",
     ]
-    new_weapon = random.choice(new_weapon)
-
-    intro()
-    where_to()
-
-    game_state = play_again()
+    new_weapon = random.choice(new_weapons)
+    game()
